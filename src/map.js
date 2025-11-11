@@ -1,13 +1,28 @@
 // map.js
 import Wall from "./objects/wall.js";
 
-export default class Map {
+class MapNode {
+  walls
+
   constructor(scene) {
     this.scene = scene;
+    this.walls = []
+  }
+
+  getClosestCell(pos) {
+    return [Math.round(pos[0]), Math.round(pos[1])]
+  }
+
+  setScene(s) {
+    this.scene = s
+  }
+
+  isWall(pos) {
+    return this.walls.find(p => p[0] == pos[0] && p[2] == pos[1])
   }
 
   async loadFromImage(url, scale = 1) {
-    const img = await this.#loadImage(url);
+    const img = await this.loadImage(url);
 
     // cria canvas temporário para leitura de pixels
     const canvas = document.createElement("canvas");
@@ -34,12 +49,13 @@ export default class Map {
         // vermelho (#ff0000): adiciona Wall
         if (r === 255 && g === 0 && b === 0) {
           this.scene.addObject(new Wall(this.scene.gl, [posX, 0, posZ]));
+          this.walls.push([posX, 0, posZ])
         }
 
         else if (r === 0 && g === 255 && b === 0) {
   if (this.scene.player?.camera) {
     const newPos = [posX, 1.2, posZ]; // 1.2 mantém altura padrão da câmera
-    this.scene.player.camera.pos = newPos;
+    this.scene.player.pos = newPos;
     console.log("Player posicionado em", newPos);
   }
 }
@@ -49,7 +65,7 @@ export default class Map {
     console.log("Mapa carregado:", img.width, "x", img.height);
   }
 
-  #loadImage(src) {
+  loadImage(src) {
     return new Promise((resolve, reject) => {
       const img = new Image();
       img.crossOrigin = "anonymous";
@@ -59,3 +75,6 @@ export default class Map {
     });
   }
 }
+
+ const Map = new MapNode()
+export default Map

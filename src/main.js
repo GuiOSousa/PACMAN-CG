@@ -26,7 +26,9 @@ scene.addObject(new Cube(gl, [-2, 0, -2]));
 scene.addObject(new Cube(gl, [-3, 1, -3]));
 scene.addObject(new Wall(gl, [-4, 0, -4]));
 
-const map = new Map(scene);
+const map = Map;
+console.log(map)
+map.setScene(scene)
 map.loadFromImage("src/assets/map.png", 1);
 
 let last = performance.now();
