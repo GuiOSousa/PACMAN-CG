@@ -14,20 +14,15 @@ export default class Player {
 		window.addEventListener("keydown", (e) => {
 		this.keys[e.key.toLowerCase()] = true;
 
-		// Resetar posição
-		if (e.key === "r" || e.key === "R") {
-			this.camera.pos = [0, 1.2, 4];
-			this.camera.yaw = 0;
-		}
+		window.addEventListener("keyup", (e) => {
+		this.keys[e.key.toLowerCase()] = false;
+		});
 
-		// Rotação da câmera
 		if (e.key === "ArrowLeft") this.camera.yaw -= 0.12;
 		if (e.key === "ArrowRight") this.camera.yaw += 0.12;
 		});
 
-		window.addEventListener("keyup", (e) => {
-		this.keys[e.key.toLowerCase()] = false;
-		});
+		
 
 		window.addEventListener("blur", () => {
 		for (let k in this.keys) this.keys[k] = false;
@@ -35,9 +30,9 @@ export default class Player {
 	}
 
 	handleInput(keys, dt) {
-			const sinY = Math.sin(this.yaw), cosY = Math.cos(this.yaw);
 			const forward = this.camera.getDirection()
-			const right = [cosY, 0, sinY];
+			const right = [-forward[2], 0, forward[0]];
+
 			let move = [0, 0, 0];
 
 			if (keys["w"]) { move[0] += forward[0]; move[2] += forward[2]; }
@@ -49,6 +44,13 @@ export default class Player {
 				return
 			}
 
+			if (keys["shift"]) {
+				this.speed = 7
+			} 
+			else {
+				this.speed = 3
+			}
+
 			const len = Math.hypot(move[0], move[2]);
 			if (len > 0.0001) {
 			move[0] /= len;
@@ -58,8 +60,6 @@ export default class Player {
 			this.pos[2] += move[2] * this.speed * dt;
 			}
 
-			if (keys[" "]) this.pos[1] += this.speed * dt;
-			if (keys["shift"]) this.pos[1] -= this.speed * dt;
 
 			
 			this.camera.setPosition(this.pos)
