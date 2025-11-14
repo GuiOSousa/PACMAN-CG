@@ -2,6 +2,7 @@ import Cube from "./objects/cube.js";
 import Wall from "./objects/wall.js";
 import Scene from "./scene.js";
 import Map from "./map.js";
+import Enemy from "./entities/enemy1.js";
 
 const canvas = document.getElementById("c");
 const gl = canvas.getContext("webgl", { antialias: true });
@@ -25,9 +26,9 @@ scene.addObject(new Cube(gl, [2, 0, -2]));
 scene.addObject(new Cube(gl, [-2, 0, -2]));
 scene.addObject(new Cube(gl, [-3, 1, -3]));
 scene.addObject(new Wall(gl, [-4, 0, -4]));
+scene.addEntity(new Enemy(gl, [60, 0, -60], scene))
 
 const map = Map;
-console.log(map)
 map.setScene(scene)
 map.loadFromImage("src/assets/map.png", 1);
 

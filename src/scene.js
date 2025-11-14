@@ -8,6 +8,7 @@ export default class Scene {
     this.uMVP = gl.getUniformLocation(this.program, "uMVP");
     this.player = new Player();
     this.objects = [];
+    this.entities = []
   }
 
   createProgram() {
@@ -53,6 +54,10 @@ export default class Scene {
     this.objects.push(obj);
   }
 
+  addEntity(ett) {
+    this.entities.push(ett)
+  }
+
   render(dt) {
     const gl = this.gl;
     gl.enable(gl.DEPTH_TEST);
@@ -64,8 +69,6 @@ export default class Scene {
     const view = this.player.camera.getViewMatrix();
 
     for (const obj of this.objects) {
-      obj.rotation = (obj.rotation || 0) + dt * 0.5;
-
       const model = M4.multiply(
         M4.translate(...(obj.position || [0, 0, 0])),
         M4.rotateY(obj.rotation)
@@ -78,6 +81,23 @@ export default class Scene {
       if (typeof obj.draw === "function") {
         obj.draw(this.program, this.uMVP, view, proj);
       }
+    }
+
+    for (const ett of this.entities) {
+      const model = M4.multiply(
+        M4.translate(...(ett.position || [0, 0, 0])),
+        M4.rotateY(ett.rotation)
+      );
+      const viewModel = M4.multiply(view, model);
+      const mvp = M4.multiply(proj, viewModel);
+
+      gl.uniformMatrix4fv(this.uMVP, false, mvp);
+
+      if (typeof ett.draw === "function") {
+        ett.draw(this.program, this.uMVP, view, proj);
+      }
+
+      ett.update(dt)
     }
   }
 }

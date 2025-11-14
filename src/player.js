@@ -1,5 +1,6 @@
 import Camera from "./camera.js";
 import Map from "./map.js";
+import Pathfinder from "./tools/pathFinder.js";
 
 export default class Player {
 	constructor() {
@@ -70,10 +71,10 @@ export default class Player {
 	}
 
 	getDirectionPos(move) {
-		return [this.pos[0] + move[0], this.pos[2] + move[2]]
+		return [this.pos[0] + move[0], 0, this.pos[2] + move[2]]
 	}
 
 	isPathBlocked(move) {
-		return Map.isWall(Map.getClosestCell(this.getDirectionPos(move)))
+		return Map.isWall(this.getDirectionPos(move))
 	}
 }
