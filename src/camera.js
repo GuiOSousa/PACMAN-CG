@@ -10,7 +10,7 @@ export default class Camera {
 	getViewMatrix() {
 		const eye = this.pos;
 		const center = [eye[0] + Math.sin(this.yaw), eye[1], eye[2] - Math.cos(this.yaw)];
-		return M4.lookAt(eye, center, [0, 1, 0]);
+		return M4.setViewingMatrix(eye, center, [0, 1, 0]);
 	}
 	
 	setPosition(p) {

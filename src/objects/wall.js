@@ -44,25 +44,30 @@ constructor(gl, position = [0, 0, 0]) {
 	this.indexCount = indices.length;
 }
 
-draw(program, uMVP, view, proj) {
-	const gl = this.gl;
-	const model = M4.multiply(M4.translate(...this.position), M4.rotateY(0));
-	const viewModel = M4.multiply(view, model);
-	const mvp = M4.multiply(proj, viewModel);
+	draw(program, uMVP, view, proj) {
+		const gl = this.gl;
+		const model = M4.multiply(
+			M4.translation(...this.position),
+			M4.yRotation(this.rotation)
+		);
 
-	gl.uniformMatrix4fv(uMVP, false, mvp);
+		const viewModel = M4.multiply(view, model);
+		const mvp = M4.multiply(proj, viewModel);
 
-	const posLoc = gl.getAttribLocation(program, 'aPos');
-	gl.bindBuffer(gl.ARRAY_BUFFER, this.posBuf);
-	gl.enableVertexAttribArray(posLoc);
-	gl.vertexAttribPointer(posLoc, 3, gl.FLOAT, false, 0, 0);
+		gl.uniformMatrix4fv(uMVP, false, mvp);
 
-	const colLoc = gl.getAttribLocation(program, 'aColor');
-	gl.bindBuffer(gl.ARRAY_BUFFER, this.colBuf);
-	gl.enableVertexAttribArray(colLoc);
-	gl.vertexAttribPointer(colLoc, 3, gl.FLOAT, false, 0, 0);
+		const posLoc = gl.getAttribLocation(program, "aPos");
+		gl.bindBuffer(gl.ARRAY_BUFFER, this.posBuf);
+		gl.enableVertexAttribArray(posLoc);
+		gl.vertexAttribPointer(posLoc, 3, gl.FLOAT, false, 0, 0);
 
-	gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.idxBuf);
-	gl.drawElements(gl.TRIANGLES, this.indexCount, gl.UNSIGNED_SHORT, 0);
-}
+		const colLoc = gl.getAttribLocation(program, "aColor");
+		gl.bindBuffer(gl.ARRAY_BUFFER, this.colBuf);
+		gl.enableVertexAttribArray(colLoc);
+		gl.vertexAttribPointer(colLoc, 3, gl.FLOAT, false, 0, 0);
+
+		gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.idxBuf);
+		gl.drawElements(gl.TRIANGLES, this.indexCount, gl.UNSIGNED_SHORT, 0);
+	}
+
 }

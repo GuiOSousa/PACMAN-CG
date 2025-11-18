@@ -1,85 +1,215 @@
 export class M4 {
-  static create() {
-    const m = new Float32Array(16);
-    m[0] = m[5] = m[10] = m[15] = 1;
-    return m;
-  }
-
-  static multiply(a, b) {
-    const o = new Float32Array(16);
-    for (let i = 0; i < 4; i++) {
-      for (let j = 0; j < 4; j++) {
-        let s = 0;
-        for (let k = 0; k < 4; k++) s += a[i + k * 4] * b[k + j * 4];
-        o[i + j * 4] = s;
-      }
+    static identity() {
+        return [
+            1, 0, 0, 0,
+            0, 1, 0, 0,
+            0, 0, 1, 0,
+            0, 0, 0, 1
+        ]
     }
-    return o;
-  }
 
-  static perspective(fovy, aspect, near, far) {
-    const f = 1 / Math.tan(fovy / 2);
-    const m = new Float32Array(16);
-    m[0] = f / aspect;
-    m[5] = f;
-    m[10] = (far + near) / (near - far);
-    m[11] = -1;
-    m[14] = (2 * far * near) / (near - far);
-    return m;
-  }
+    static transpose(m) {
+        return [
+            m[0], m[4], m[8],  m[12],
+            m[1], m[5], m[9],  m[13],
+            m[2], m[6], m[10], m[14],
+            m[3], m[7], m[11], m[15],
+        ]
+    }
 
-  static translate(x, y, z) {
-    const m = M4.create();
-    m[12] = x;
-    m[13] = y;
-    m[14] = z;
-    return m;
-  }
+    static create() {
+        const m = new Float32Array(16)
+        m[0] = m[5] = m[10] = m[15] = 1
+        return m
+    }
 
-  static rotateY(rad) {
-    const c = Math.cos(rad),
-      s = Math.sin(rad);
-    const m = M4.create();
-    m[0] = c;
-    m[2] = s;
-    m[8] = -s;
-    m[10] = c;
-    return m;
-  }
+    static multiply(a, b) {
+        var a00 = a[0 * 4 + 0]
+        var a01 = a[1 * 4 + 0]
+        var a02 = a[2 * 4 + 0]
+        var a03 = a[3 * 4 + 0]
+        var a10 = a[0 * 4 + 1]
+        var a11 = a[1 * 4 + 1]
+        var a12 = a[2 * 4 + 1]
+        var a13 = a[3 * 4 + 1]
+        var a20 = a[0 * 4 + 2]
+        var a21 = a[1 * 4 + 2]
+        var a22 = a[2 * 4 + 2]
+        var a23 = a[3 * 4 + 2]
+        var a30 = a[0 * 4 + 3]
+        var a31 = a[1 * 4 + 3]
+        var a32 = a[2 * 4 + 3]
+        var a33 = a[3 * 4 + 3]
+        var b00 = b[0 * 4 + 0]
+        var b01 = b[1 * 4 + 0]
+        var b02 = b[2 * 4 + 0]
+        var b03 = b[3 * 4 + 0]
+        var b10 = b[0 * 4 + 1]
+        var b11 = b[1 * 4 + 1]
+        var b12 = b[2 * 4 + 1]
+        var b13 = b[3 * 4 + 1]
+        var b20 = b[0 * 4 + 2]
+        var b21 = b[1 * 4 + 2]
+        var b22 = b[2 * 4 + 2]
+        var b23 = b[3 * 4 + 2]
+        var b30 = b[0 * 4 + 3]
+        var b31 = b[1 * 4 + 3]
+        var b32 = b[2 * 4 + 3]
+        var b33 = b[3 * 4 + 3]
+        return [
+        a00 * b00 + a01 * b10 + a02 * b20 + a03 * b30,
+        a10 * b00 + a11 * b10 + a12 * b20 + a13 * b30,
+        a20 * b00 + a21 * b10 + a22 * b20 + a23 * b30,
+        a30 * b00 + a31 * b10 + a32 * b20 + a33 * b30,
+        a00 * b01 + a01 * b11 + a02 * b21 + a03 * b31,
+        a10 * b01 + a11 * b11 + a12 * b21 + a13 * b31,
+        a20 * b01 + a21 * b11 + a22 * b21 + a23 * b31,
+        a30 * b01 + a31 * b11 + a32 * b21 + a33 * b31,
+        a00 * b02 + a01 * b12 + a02 * b22 + a03 * b32,
+        a10 * b02 + a11 * b12 + a12 * b22 + a13 * b32,
+        a20 * b02 + a21 * b12 + a22 * b22 + a23 * b32,
+        a30 * b02 + a31 * b12 + a32 * b22 + a33 * b32,
+        a00 * b03 + a01 * b13 + a02 * b23 + a03 * b33,
+        a10 * b03 + a11 * b13 + a12 * b23 + a13 * b33,
+        a20 * b03 + a21 * b13 + a22 * b23 + a23 * b33,
+        a30 * b03 + a31 * b13 + a32 * b23 + a33 * b33,
+        ]
+    }
+    
+    static perspective(fovy, aspect, near, far) {
+        const f = 1 / Math.tan(fovy / 2);
+        const m = new Float32Array(16);
+        m[0] = f / aspect;
+        m[5] = f;
+        m[10] = (far + near) / (near - far);
+        m[11] = -1;
+        m[14] = (2 * far * near) / (near - far);
+        return m;
+    }
 
-  static lookAt(eye, center, up) {
-    const z = M4.normalize([
-      eye[0] - center[0],
-      eye[1] - center[1],
-      eye[2] - center[2],
-    ]);
-    const x = M4.normalize(M4.cross(up, z));
-    const y = M4.cross(z, x);
-    const m = M4.create();
-    m[0] = x[0]; m[1] = y[0]; m[2] = z[0];
-    m[4] = x[1]; m[5] = y[1]; m[6] = z[1];
-    m[8] = x[2]; m[9] = y[2]; m[10] = z[2];
-    m[12] = -M4.dot(x, eye);
-    m[13] = -M4.dot(y, eye);
-    m[14] = -M4.dot(z, eye);
-    return m;
-  }
+    static translation(tx, ty, tz) {
+        return [
+            1,  0,  0,  0,
+            0,  1,  0,  0,
+            0,  0,  1,  0,
+            tx, ty, tz, 1,
+        ]
+    }
 
-  // ==== VETORES ====
-  static normalize(v) {
-    const l = Math.hypot(...v);
-    return v.map((x) => x / (l || 1));
-  }
+    static xRotation (angleInRadians) {
+        var c = Math.cos(angleInRadians)
+        var s = Math.sin(angleInRadians)
 
-  static cross(a, b) {
-    return [
-      a[1] * b[2] - a[2] * b[1],
-      a[2] * b[0] - a[0] * b[2],
-      a[0] * b[1] - a[1] * b[0],
-    ];
-  }
+        return [
+            1,  0, 0, 0,
+            0,  c, s, 0,
+            0, -s, c, 0,
+            0,  0, 0, 1,
+        ]
+    }
 
-  static dot(a, b) {
-    return a[0] * b[0] + a[1] * b[1] + a[2] * b[2];
-  }
+    static yRotation (angleInRadians) {
+        var c = Math.cos(angleInRadians)
+        var s = Math.sin(angleInRadians)
+
+        return [
+            c, 0, -s, 0,
+            0, 1,  0, 0,
+            s, 0,  c, 0,
+            0, 0,  0, 1,
+        ]
+    }
+
+    static zRotation (angleInRadians) {
+        var c = Math.cos(angleInRadians)
+        var s = Math.sin(angleInRadians)
+
+        return [
+            c, s, 0, 0,
+            -s, c, 0, 0,
+            0, 0, 1, 0,
+            0, 0, 0, 1,
+        ]
+    }
+
+    static scaling (sx, sy, sz) {
+        return [
+            sx, 0,  0,  0,
+            0, sy,  0,  0,
+            0,  0, sz,  0,
+            0,  0,  0,  1,
+        ]
+    }
+
+    static translate (m, tx, ty, tz) {
+        return M4.multiply(M4.translation(tx, ty, tz), m)
+    }
+
+    static xRotate (m, angleInRadians) {
+        return M4.multiply(M4.xRotation(angleInRadians), m)
+    }
+
+    static yRotate(m, angleInRadians) {
+        return M4.multiply(M4.yRotation(angleInRadians), m)
+    }
+
+    static zRotate(m, angleInRadians) {
+        return M4.multiply(M4.zRotation(angleInRadians), m)
+    }
+
+    static scale(m, sx, sy, sz) {
+        return M4.multiply(M4.scaling(sx, sy, sz), m);
+    }
+
+    static unitVector (v){ 
+        let vModulus = M4.vectorModulus(v)
+        return v.map(x => x/vModulus )
+    }
+
+    static vectorModulus(v){
+        return Math.sqrt(Math.pow(v[0],2)+Math.pow(v[1],2)+Math.pow(v[2],2));
+    }
+
+    static crossProduct (v1,v2){
+        let result = [
+            v1[1]*v2[2] - v1[2]*v2[1],
+            v1[2]*v2[0] - v1[0]*v2[2],
+            v1[0]*v2[1] - v1[1]*v2[0]
+        ]
+        return result
+    }
+
+    static setViewingMatrix (P0, Pref, V){
+        let N = [P0[0]-Pref[0],P0[1]-Pref[1],P0[2]-Pref[2]];
+        let n = M4.unitVector(N);
+        let u = M4.unitVector(M4.crossProduct(V,n));
+        let v = M4.crossProduct(n,u);
+
+        let translationMatrix = M4.translation(-P0[0],-P0[1],-P0[2]);
+        let rotationMatrix = [
+            u[0], v[0], n[0], 0,
+            u[1], v[1], n[1], 0,
+            u[2], v[2], n[2], 0,
+            0, 0, 0, 1
+        ]
+        return M4.multiply(rotationMatrix, translationMatrix);
+    }
+    
+    static setOrthographicProjectionMatrix (xw_min,xw_max,yw_min,yw_max,z_near,z_far){
+        return [
+            2/(xw_max-xw_min), 0, 0, 0,
+            0, 2/(yw_max-yw_min), 0, 0,
+            0, 0, -2/(z_near-z_far), 0,
+            -(xw_max+xw_min)/(xw_max-xw_min), -(yw_max+yw_min)/(yw_max-yw_min), (z_near+z_far)/(z_near-z_far), 1
+        ]
+    }
+
+    static setPerspectiveProjectionMatrix (xw_min,xw_max,yw_min,yw_max,z_near,z_far){
+        return [
+            (-2*z_near)/(xw_max-xw_min), 0, 0, 0,
+            0, (-2*z_near)/(yw_max-yw_min), 0, 0,
+            (xw_max+xw_min)/(xw_max-xw_min), (yw_max+yw_min)/(yw_max-yw_min), (z_near+z_far)/(z_near-z_far), -1,
+            0, 0, -(2*z_near*z_far)/(z_near-z_far), 0
+        ]
+    }
 }

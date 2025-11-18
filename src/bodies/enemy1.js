@@ -36,20 +36,24 @@ export default class Body {
         this.indexCount = indices.length;
     }
 
-    draw(program, uMVP, view, proj) {
+        draw(program, uMVP, view, proj) {
         const gl = this.gl;
-        const model = M4.multiply(M4.translate(...this.position), M4.rotateY(this.rotation));
+        const model = M4.multiply(
+            M4.translation(...this.position),
+            M4.yRotation(this.rotation)
+        );
+
         const viewModel = M4.multiply(view, model);
         const mvp = M4.multiply(proj, viewModel);
 
         gl.uniformMatrix4fv(uMVP, false, mvp);
 
-        const posLoc = gl.getAttribLocation(program, 'aPos');
+        const posLoc = gl.getAttribLocation(program, "aPos");
         gl.bindBuffer(gl.ARRAY_BUFFER, this.posBuf);
         gl.enableVertexAttribArray(posLoc);
         gl.vertexAttribPointer(posLoc, 3, gl.FLOAT, false, 0, 0);
 
-        const colLoc = gl.getAttribLocation(program, 'aColor');
+        const colLoc = gl.getAttribLocation(program, "aColor");
         gl.bindBuffer(gl.ARRAY_BUFFER, this.colBuf);
         gl.enableVertexAttribArray(colLoc);
         gl.vertexAttribPointer(colLoc, 3, gl.FLOAT, false, 0, 0);

@@ -58,6 +58,19 @@ export default class Pathfinder {
     
     static simplifyPath(path = []) {
         path = path.slice(1, path.length)
+        const reduce = []
+
+        for (let i = 0; i < path.length - 3; i++) {
+            if (path[i][0] === path[i+1][0] && path[i+1][0] == path[i+2][0]) {
+                reduce.push(path[i+1])
+            }
+            else if (path[i][2] === path[i+1][2] && path[i+1][2] == path[i+2][2]) {
+                reduce.push(path[i+1])
+            }
+        }
+
+        path = path.filter(s => !reduce.find(a => a == s))
+        console.log(path)
         return path
     }
 }
