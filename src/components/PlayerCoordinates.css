@@ -1,0 +1,14 @@
+.coords {
+    position: fixed;
+    top: 10px;
+    right: 10px;
+    z-index: 9999;
+    
+    padding: 6px 10px;
+    background: rgba(0, 0, 0, 0.55);
+    color: #00ff9c;
+    font-family: monospace;
+    font-size: 14px;
+    border-radius: 6px;
+    pointer-events: none;
+}

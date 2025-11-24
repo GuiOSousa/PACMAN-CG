@@ -21,10 +21,6 @@ new ResizeObserver(resize).observe(canvas);
 resize();
 
 const scene = new Scene(gl);
-scene.addObject(new Cube(gl, [0, 0, 0]));
-scene.addObject(new Cube(gl, [2, 0, -2]));
-scene.addObject(new Cube(gl, [-2, 0, -2]));
-scene.addObject(new Cube(gl, [-3, 1, -3]));
 scene.addObject(new Wall(gl, [-4, 0, -4]));
 
 scene.addEntity(new Enemy(gl, [42, 0, -36], scene))
