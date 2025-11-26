@@ -1,7 +1,7 @@
 import Camera from "./camera.js";
-import Map from "./map.js";
-import variables from "./reactSignals/signal.js";
-import Pathfinder from "./tools/pathFinder.js";
+import Map from "../gameStrutcures/map.js";
+import variables from "../reactSignals/signal.js";
+import Pathfinder from "../tools/pathFinder.js";
 
 export default class Player {
 	constructor() {

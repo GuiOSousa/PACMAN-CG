@@ -1,7 +1,7 @@
 export default class PixelInterpreter {
   constructor() {}
 
-  static async getPixelsFromImage(url) {
+  static async loadMap(url) {
     return new Promise((resolve, reject) => {
       const img = new Image();
       img.crossOrigin = 'anonymous';

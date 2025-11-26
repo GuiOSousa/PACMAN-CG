@@ -1,5 +1,5 @@
-import { M4 } from "./tools/m4.js";
-import Player from "./player.js";
+import { M4 } from "../tools/m4.js";
+import Player from "../entities/player.js";
 
 export default class Scene {
 	constructor(gl) {

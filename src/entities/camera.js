@@ -1,4 +1,4 @@
-import { M4 } from "./tools/m4.js";
+import { M4 } from "../tools/m4.js";
 
 export default class Camera {
 	constructor() {

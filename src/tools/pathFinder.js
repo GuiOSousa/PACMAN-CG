@@ -6,7 +6,6 @@ export default class Pathfinder {
 
     static findPathBFS(start, goal, navigationMap, simplify = true) {
         const toKey = (p) => `${p[0]},${p[1]}`;
-        console.log(`finding path between: ${start} and ${goal}`)
         const nodes = Object.create(null);
         for (const n of navigationMap) {
             const [x, z] = this.getClosestCell(n);
@@ -70,7 +69,6 @@ export default class Pathfinder {
         }
 
         path = path.filter(s => !reduce.find(a => a == s))
-        console.log(path)
         return path
     }
 }

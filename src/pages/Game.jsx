@@ -1,72 +1,70 @@
 import { useEffect, useRef } from "react";
-import Scene from "../scene.js";
-import Map from "../map.js";
+import Scene from "../gameStrutcures/scene.js";
+import Map from "../gameStrutcures/map.js";
 import Wall from "../objects/wall.js";
 import Enemy from "../entities/enemy1.js";
 import './Game.css'
 import PlayerCoordinatesDisplay from "../components/PlayerCoordinates.jsx";
 
 export default function GameCanvas() {
-  const canvasRef = useRef(null);
+	const canvasRef = useRef(null);
 
-  useEffect(() => {
-    const canvas = canvasRef.current;
+	useEffect(() => {
+		const canvas = canvasRef.current;
 
-    const gl = canvas.getContext("webgl", { antialias: true });
-    if (!gl) {
-      console.error("WebGL não suportado");
-      return;
-    }
+		const gl = canvas.getContext("webgl", { antialias: true });
+		if (!gl) {
+			return
+		}
 
-    function resize() {
-      const w = canvas.clientWidth | 0;
-      const h = canvas.clientHeight | 0;
+		function resize() {
+			const w = canvas.clientWidth | 0
+			const h = canvas.clientHeight | 0
 
-      if (canvas.width !== w || canvas.height !== h) {
-        canvas.width = w;
-        canvas.height = h;
-        gl.viewport(0, 0, w, h);
-      }
-    }
-    const ro = new ResizeObserver(resize);
-    ro.observe(canvas);
-    resize();
+			if (canvas.width !== w || canvas.height !== h) {
+				canvas.width = w
+				canvas.height = h
+				gl.viewport(0, 0, w, h)
+			}
+		}
 
-    const scene = new Scene(gl)
-    scene.addObject(new Wall(gl, [-4, 0, -4]))
-    scene.addEntity(new Enemy(gl, [42, 0, -36], scene))
-    
-    Map.setScene(scene);
-    Map.loadFromImage("src/assets/map.png", 1);
+		const ro = new ResizeObserver(resize);
+		ro.observe(canvas);
+		resize();
 
-    let last = performance.now();
-    function loop(now) {
-      const dt = Math.min((now - last) / 1000, 0.04);
-      last = now;
-      scene.player.update(dt);
-      scene.render(dt);
+		const scene = new Scene(gl)
+		scene.addObject(new Wall(gl, [-4, 0, -4]))
+		scene.addEntity(new Enemy(gl, [42, 0, -36], scene))
+		
+		Map.setScene(scene);
+		Map.loadFromImage("src/assets/map.png", 1);
 
-      requestAnimationFrame(loop);
-    }
-    requestAnimationFrame(loop);
+		let last = performance.now();
+		function loop(now) {
+			const dt = Math.min((now - last) / 1000, 0.04);
+			last = now;
+			scene.player.update(dt);
+			scene.render(dt);
 
-    return () => {
-      ro.disconnect();
-    };
-  }, []);
+			requestAnimationFrame(loop);
+		}
+		requestAnimationFrame(loop);
 
-  return (
-    <>
-    <PlayerCoordinatesDisplay/>
-    <canvas
-      ref={canvasRef}
-      id="c"
-      style={{
-        width: "100vw",
-        height: "100vh",
-        display: "block",
-      }}
-    />
-    </>
-  );
+		return () => {
+			ro.disconnect();
+		}
+	}, [])
+
+	return (
+		<>
+		<PlayerCoordinatesDisplay/>
+		<canvas ref={canvasRef} id="c"
+		style={{
+			width: "100vw",
+			height: "100vh",
+			display: "block",
+		}}
+		/>
+		</>
+	);
 }

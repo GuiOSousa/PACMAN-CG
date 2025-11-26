@@ -1,7 +1,7 @@
 import { M4 } from "../tools/m4.js";
 import Body from "../bodies/enemy1.js";
 import Pathfinder from "../tools/pathFinder.js";
-import Map from "../map.js";
+import Map from "../gameStrutcures/map.js";
 
 export default class Enemy {
   constructor(gl, startPos = [0, 0, 0], scene) {
@@ -23,7 +23,6 @@ export default class Enemy {
     // Recalcular caminho a cada 2 segundos
     this.repathTimer += dt;
     if (this.repathTimer > 2.0 || this.path.length === 0) {
-        console.log("a")
       this.repathTimer = 0;
       this.path = Pathfinder.findPathBFS(
         this.position,
@@ -31,12 +30,10 @@ export default class Enemy {
         Map.navigation
       );
       this.pathIndex = 0;
-      console.log(this.path)
     }
 
     // Seguir o caminho se existir
     if (this.path.length > 0 && this.pathIndex < this.path.length) {
-        console.log("b")
       const target = this.path[this.pathIndex];
       const dir = [
         target[0] - this.position[0],
