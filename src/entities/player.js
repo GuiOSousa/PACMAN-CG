@@ -8,21 +8,18 @@ export default class Player {
 		this.camera = new Camera();
 		this.pos = [0, 0, 0]
 		this.speed = 3.0
-		this.keys = {};
-		this._setupInput();
+		this.keys = {}
+		this._setupInput()
+		this._setupMouse()
 	}
 
 	_setupInput() {
 		window.addEventListener("keydown", (e) => {
-		this.keys[e.key.toLowerCase()] = true;
-
-		window.addEventListener("keyup", (e) => {
-		this.keys[e.key.toLowerCase()] = false;
-		});
-
-		if (e.key === "ArrowLeft") this.camera.yaw -= 0.12;
-		if (e.key === "ArrowRight") this.camera.yaw += 0.12;
-		});
+			this.keys[e.key.toLowerCase()] = true
+			window.addEventListener("keyup", (e) => {
+				this.keys[e.key.toLowerCase()] = false
+			})
+		})
 
 		
 
@@ -30,6 +27,23 @@ export default class Player {
 		for (let k in this.keys) this.keys[k] = false;
 		});
 	}
+
+	_setupMouse() {
+		const canvas = document.querySelector("canvas");
+
+		canvas.addEventListener("click", () => {
+			canvas.requestPointerLock();
+		});
+
+		document.addEventListener("mousemove", (e) => {
+			if (document.pointerLockElement === canvas) {
+				this.camera.yaw += e.movementX * 0.002;
+				const camPitch = this.camera.pitch - (e.movementY * 0.002)
+				this.camera.pitch = Math.max(-1.3, Math.min(1.3, camPitch));
+			}
+		});
+	}
+
 
 	handleInput(keys, dt) {
 			const forward = this.camera.getDirection()

@@ -37,19 +37,19 @@ class MapNode {
                 const posX = x * scale;
                 const posZ = -y * scale;
 
-                // ---------- PAREDE ----------
+                
                 if (r === 255 && g === 0 && b === 0) {
                     this.scene.addObject(
                         new Wall(this.scene.gl, [posX, 0, posZ])
                     );
                     this.walls.push([posX, 0, posZ]);
-                    continue;
+                    continue
                 }
 
-                // ---------- NAVEGAÇÃO ----------
+                
                 this.navigation.push([posX, 0, posZ]);
 
-                // ---------- PLAYER ----------
+                
                 if (r === 0 && g === 255 && b === 0) {
                     const p = this.scene.player;
                     if (p?.camera) {
@@ -58,7 +58,6 @@ class MapNode {
                     }
                 }
 
-                // ---------- ORB ----------
                 if (r === 0 && g === 0 && b === 255) {
                     this.orbs.push([posX, 0, posZ]);
                 }
