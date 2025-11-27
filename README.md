@@ -1,16 +1,30 @@
-# React + Vite
+# PAC-MAN 3D
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Uma versão do clásico jogo Pac-Man reimaginada num mundo 3D. Desenvolvido completamente com JavaScript e WebGL.
 
-Currently, two official plugins are available:
+## 1- Gameplay
+Descrição
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## 2- Estrutura do Projeto
+### 2.1- Scene
 
-## React Compiler
+### 2.2- Entities
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+### 2.3- Objects
 
-## Expanding the ESLint configuration
+### 2.4- Tools
+#### 2.4.1- M4.js
+A classe responsável por lidar com as matrizes 4x4. Aplica transformações como translação, escala, rotação e multiplicação
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+#### 2.4.2- Pathfinder.js
+Classe utilitária que gera caminhos entre dois pontos. É usada pelos inimigos para perseguir o jogador.
+
+- **getClosestCell() -> Array[2]**: Transforma uma coordenada global (x, y, z) em coordenadas no plano XZ de valores inteiros.
+- **findPathBFS(start, goal, navigationMap, simplify = true) -> Array[ ]**: Implementação do algoritmo de busca em largura.
+
+#### 2.4.3- PixelInterpreter.js
+Responsável por ler a imagem geradora do mapa e acessar o valor das cores de cada pixel.
+
+- **loadMap(url) -> Array[ ][ ]**: Retorna uma matriz de pixels RGBA baseada na imagem passada.
+
+### 2.5- React

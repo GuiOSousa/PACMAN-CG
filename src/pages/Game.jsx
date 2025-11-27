@@ -5,6 +5,7 @@ import Wall from "../objects/wall.js";
 import Enemy from "../entities/enemy1.js";
 import './Game.css'
 import PlayerCoordinatesDisplay from "../components/PlayerCoordinates.jsx";
+import ScoreDisplay from "../components/ScoreDisplay.jsx";
 
 export default function GameCanvas() {
 	const canvasRef = useRef(null);
@@ -33,7 +34,6 @@ export default function GameCanvas() {
 		resize();
 
 		const scene = new Scene(gl)
-		scene.addObject(new Wall(gl, [-4, 0, -4]))
 		scene.addEntity(new Enemy(gl, [42, 0, -36], scene))
 		
 		Map.setScene(scene);
@@ -57,7 +57,10 @@ export default function GameCanvas() {
 
 	return (
 		<>
-		<PlayerCoordinatesDisplay/>
+		<div className="Displays">
+			<PlayerCoordinatesDisplay/>
+			<ScoreDisplay/>
+		</div>
 		<canvas ref={canvasRef} id="c"
 		style={{
 			width: "100vw",

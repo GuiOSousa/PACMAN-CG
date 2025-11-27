@@ -7,6 +7,7 @@ export default class Pathfinder {
     static findPathBFS(start, goal, navigationMap, simplify = true) {
         const toKey = (p) => `${p[0]},${p[1]}`;
         const nodes = Object.create(null);
+        
         for (const n of navigationMap) {
             const [x, z] = this.getClosestCell(n);
             nodes[`${x},${z}`] = n;
