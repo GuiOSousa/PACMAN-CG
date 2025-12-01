@@ -1,88 +1,36 @@
 import { M4 } from "../tools/m4.js";
 
-export default class Wall {
-    constructor(gl, position = [0, 0, 0]) {
+export default class Floor {
+    constructor(gl, position = [0, 0, 0], size = [10, 10]) {
         this.gl = gl;
         this.position = position;
-        this.rotation = 0;
+        this.size = size;
         this.texture = null;
 
-        // ---------------------------------------
-        // 24 vértices (6 faces × 4 vértices)
-        // ---------------------------------------
-
-        const px = 0.5, py = 5.0, pz = 0.5;
-        const nx = -0.5, ny = 0.0, nz = -0.5;
+        const [w, d] = size;
 
         const positions = new Float32Array([
-
-            // Frente
-            nx, ny,  pz,
-             px, ny,  pz,
-             px, py,  pz,
-            nx, py,  pz,
-
-            // Trás
-             px, ny, nz,
-            nx, ny, nz,
-            nx, py, nz,
-             px, py, nz,
-
-            // Direita
-             px, ny,  pz,
-             px, ny, nz,
-             px, py, nz,
-             px, py,  pz,
-
-            // Esquerda
-            nx, ny, nz,
-            nx, ny,  pz,
-            nx, py,  pz,
-            nx, py, nz,
-
-            // Topo
-            nx, py,  pz,
-             px, py,  pz,
-             px, py, nz,
-            nx, py, nz,
-
-            // Base
-            nx, ny, nz,
-             px, ny, nz,
-             px, ny,  pz,
-            nx, ny,  pz,
+            0, 0, 0,
+            w, 0, 0,
+            w, 0, d,
+            0, 0, d,
         ]);
 
-        const repeatX = 1
-		const repeatY = py - ny
-
-		const uvFace = [
-			0,     0,
-			repeatX, 0,
-			repeatX, repeatY,
-			0,     repeatY
-		];
-
+        const tileX = w;
+        const tileY = d;
 
         const uvs = new Float32Array([
-            ...uvFace,
-            ...uvFace,
-            ...uvFace,
-            ...uvFace,
-            ...uvFace,
-            ...uvFace,
+            0,     0,
+            tileX, 0,
+            tileX, tileY,
+            0,     tileY
         ]);
 
         const indexes = new Uint16Array([
-            0,1,2, 0,2,3,         
-            4,5,6, 4,6,7,
-            8,9,10, 8,10,11,
-            12,13,14, 12,14,15,
-            16,17,18, 16,18,19,
-            20,21,22, 20,22,23
+            0, 1, 2,
+            0, 2, 3
         ]);
 
-        // Buffers
         this.posBuf = gl.createBuffer();
         gl.bindBuffer(gl.ARRAY_BUFFER, this.posBuf);
         gl.bufferData(gl.ARRAY_BUFFER, positions, gl.STATIC_DRAW);
@@ -97,7 +45,7 @@ export default class Wall {
 
         this.indexCount = indexes.length;
 
-        this.loadTexture("src/assets/wall.png")
+        this.loadTexture("src/assets/ground.png");
     }
 
     loadTexture(url) {
@@ -105,17 +53,18 @@ export default class Wall {
         const tex = gl.createTexture();
         const img = new Image();
         img.src = url;
+
         img.onload = () => {
             gl.bindTexture(gl.TEXTURE_2D, tex);
             gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, img);
 
             gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.REPEAT);
-			gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.REPEAT);
-			gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR_MIPMAP_LINEAR);
-			gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+            gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.REPEAT);
 
-			gl.generateMipmap(gl.TEXTURE_2D);
+            gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+            gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR_MIPMAP_LINEAR);
 
+            gl.generateMipmap(gl.TEXTURE_2D);
 
             this.texture = tex;
         };
@@ -124,17 +73,14 @@ export default class Wall {
     draw(program, uMVP, view, proj) {
         const gl = this.gl;
 
-        if (!this.texture) return;
+        if (!this.texture) return
 
-        const model = M4.multiply(
-            M4.translation(...this.position),
-            M4.yRotation(this.rotation)
-        );
+        const model = M4.translation(...this.position);
+        const viewModel = M4.multiply(view, model);
+        const mvp = M4.multiply(proj, viewModel);
 
-        const mvp = M4.multiply(proj, M4.multiply(view, model));
         gl.uniformMatrix4fv(uMVP, false, mvp);
 
-        // usa textura
         gl.uniform1i(gl.getUniformLocation(program, "uHasTexture"), 1);
 
         const posLoc = gl.getAttribLocation(program, "aPos");

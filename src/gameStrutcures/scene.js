@@ -15,19 +15,36 @@ export default class Scene {
 		const gl = this.gl;
 		const vs = `
 		attribute vec3 aPos;
+		attribute vec2 aUV;
 		attribute vec3 aColor;
+
 		uniform mat4 uMVP;
+
+		varying vec2 vUV;
 		varying vec3 vColor;
+
 		void main() {
 			gl_Position = uMVP * vec4(aPos, 1.0);
+			vUV = aUV;
 			vColor = aColor;
 		}
+
 		`;
 		const fs = `
 		precision mediump float;
+
+		varying vec2 vUV;
 		varying vec3 vColor;
+
+		uniform sampler2D uTexture;
+		uniform bool uHasTexture;
+
 		void main() {
-			gl_FragColor = vec4(vColor, 1.0);
+			if (uHasTexture) {
+				gl_FragColor = texture2D(uTexture, vUV);
+			} else {
+				gl_FragColor = vec4(vColor, 1.0);
+			}
 		}
 		`;
 		const compile = (src, type) => {

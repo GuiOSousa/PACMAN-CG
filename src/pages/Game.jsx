@@ -6,6 +6,7 @@ import Enemy from "../entities/enemy1.js";
 import './Game.css'
 import PlayerCoordinatesDisplay from "../components/PlayerCoordinates.jsx";
 import ScoreDisplay from "../components/ScoreDisplay.jsx";
+import Floor from "../objects/ground.js";
 
 export default function GameCanvas() {
 	const canvasRef = useRef(null);
@@ -36,6 +37,9 @@ export default function GameCanvas() {
 		const scene = new Scene(gl)
 		scene.addEntity(new Enemy(gl, [42, 0, -36], scene))
 		
+		const floor = new Floor(gl, [0, 0, -121], [121,121])
+		scene.addObject(floor);
+
 		Map.setScene(scene);
 		Map.loadFromImage("src/assets/map.png", 1);
 
