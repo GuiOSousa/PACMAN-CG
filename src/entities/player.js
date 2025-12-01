@@ -2,6 +2,7 @@ import Camera from "./camera.js";
 import Map from "../gameStrutcures/map.js";
 import variables from "../reactSignals/signal.js";
 import Pathfinder from "../tools/pathFinder.js";
+import ColliderAux from "../tools/colliderAux.js";
 
 export default class Player {
 	constructor() {
@@ -11,6 +12,7 @@ export default class Player {
 		this.keys = {}
 		this._setupInput()
 		this._setupMouse()
+		this.colliderAux = new ColliderAux
 	}
 
 	_setupInput() {
@@ -56,9 +58,9 @@ export default class Player {
 			if (keys["a"]) { move[0] -= right[0]; move[2] -= right[2]; }
 			if (keys["d"]) { move[0] += right[0]; move[2] += right[2]; }
 
-			if (this.isPathBlocked(move)){
-				return
-			}
+			//if (this.isPathBlocked(move)){
+			//	return
+			//}
 
 			if (keys["shift"]) {
 				this.speed = 7
@@ -69,15 +71,15 @@ export default class Player {
 
 			const len = Math.hypot(move[0], move[2]);
 			if (len > 0.0001) {
-			move[0] /= len;
-			move[2] /= len;
+				move[0] /= len;
+				move[2] /= len;
+				
+				move = this.colliderAux.getOrientedVector(move, this.pos)
 
-			this.pos[0] += move[0] * this.speed * dt;
-			this.pos[2] += move[2] * this.speed * dt;
+				this.pos[0] += move[0] * this.speed * dt;
+				this.pos[2] += move[2] * this.speed * dt;
 			}
 
-
-			
 			this.camera.setPosition(this.pos)
 		}
 
