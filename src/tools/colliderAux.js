@@ -4,29 +4,31 @@ import Map from "../gameStrutcures/map";
 export default class ColliderAux {
     constructor(){}
 
-    isBlocked(vec, pos) {
+    removeBlocked(vec, pos, x, z) {
+        const dist = 0.2
         const blockedDirections = [
-            Map.isWall([pos[0] + 0.1, 0, pos[2]]),
-            Map.isWall([pos[0] - 0.1, 0, pos[2]]),
-            Map.isWall([pos[0], 0, pos[2] + 0.1]),
-            Map.isWall([pos[0], 0, pos[2] - 0.1]),
+            Map.isWall([pos[0] + dist, 0, pos[2] + dist]),
+            Map.isWall([pos[0] - dist, 0, pos[2] + dist]),
+            Map.isWall([pos[0] + dist, 0, pos[2] - dist]),
+            Map.isWall([pos[0] - dist, 0, pos[2] - dist]),
         ]
 
-        if (vec[0] > 0 && blockedDirections[0]) { return true }
-        if (vec[0] < 0 && blockedDirections[1]) { return true }
-        if (vec[2] > 0 && blockedDirections[2]) { return true }
-        if (vec[2] < 0 && blockedDirections[3]) { return true }
+        if (vec[0] > 0 && (blockedDirections[0] || blockedDirections[2])) { x = 0 }
+        if (vec[0] < 0 && (blockedDirections[1] || blockedDirections[3])) { x = 0 }
+        if (vec[2] > 0 && (blockedDirections[0] || blockedDirections[1])) { z = 0 }
+        if (vec[2] < 0 && (blockedDirections[2] || blockedDirections[3])) { z = 0 }
         
-        return false
+        return [x, z]
     }
 
     getOrientedVector(vec, pos) {
+        // eslint-disable-next-line no-unused-vars
         const [x, y, z] = vec;
 
         const right = [z, -x];
         const left  = [-z, x];
 
-        const sideOffset = 0.25;
+        const sideOffset = 0.35;
         const forwardOffset = 0.6;
 
         const px = pos[0];
@@ -58,9 +60,7 @@ export default class ColliderAux {
             zFinal = 0
         }
 
-        if (this.isBlocked(vec, pos)) {
-            return [0, 0, 0]
-        }
+        [xFinal, zFinal] = this.removeBlocked(vec, pos, xFinal, zFinal)
 
         if (rightBlocked || leftBlocked) {
             return [xFinal, 0, zFinal]

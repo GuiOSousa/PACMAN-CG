@@ -58,10 +58,6 @@ export default class Player {
 			if (keys["a"]) { move[0] -= right[0]; move[2] -= right[2]; }
 			if (keys["d"]) { move[0] += right[0]; move[2] += right[2]; }
 
-			//if (this.isPathBlocked(move)){
-			//	return
-			//}
-
 			if (keys["shift"]) {
 				this.speed = 7
 			} 

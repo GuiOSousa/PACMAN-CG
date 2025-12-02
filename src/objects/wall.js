@@ -7,49 +7,38 @@ export default class Wall {
         this.rotation = 0;
         this.texture = null;
 
-        // ---------------------------------------
-        // 24 vértices (6 faces × 4 vértices)
-        // ---------------------------------------
-
         const px = 0.5, py = 5.0, pz = 0.5;
         const nx = -0.5, ny = 0.0, nz = -0.5;
 
         const positions = new Float32Array([
-
-            // Frente
             nx, ny,  pz,
-             px, ny,  pz,
-             px, py,  pz,
+            px, ny,  pz,
+            px, py,  pz,
             nx, py,  pz,
 
-            // Trás
-             px, ny, nz,
+            px, ny, nz,
             nx, ny, nz,
             nx, py, nz,
-             px, py, nz,
+            px, py, nz,
 
-            // Direita
-             px, ny,  pz,
-             px, ny, nz,
-             px, py, nz,
-             px, py,  pz,
+            px, ny,  pz,
+            px, ny, nz,
+            px, py, nz,
+            px, py,  pz,
 
-            // Esquerda
             nx, ny, nz,
             nx, ny,  pz,
             nx, py,  pz,
             nx, py, nz,
 
-            // Topo
             nx, py,  pz,
-             px, py,  pz,
-             px, py, nz,
+            px, py,  pz,
+            px, py, nz,
             nx, py, nz,
 
-            // Base
             nx, ny, nz,
-             px, ny, nz,
-             px, ny,  pz,
+            px, ny, nz,
+            px, ny,  pz,
             nx, ny,  pz,
         ]);
 
@@ -82,7 +71,6 @@ export default class Wall {
             20,21,22, 20,22,23
         ]);
 
-        // Buffers
         this.posBuf = gl.createBuffer();
         gl.bindBuffer(gl.ARRAY_BUFFER, this.posBuf);
         gl.bufferData(gl.ARRAY_BUFFER, positions, gl.STATIC_DRAW);
@@ -134,7 +122,6 @@ export default class Wall {
         const mvp = M4.multiply(proj, M4.multiply(view, model));
         gl.uniformMatrix4fv(uMVP, false, mvp);
 
-        // usa textura
         gl.uniform1i(gl.getUniformLocation(program, "uHasTexture"), 1);
 
         const posLoc = gl.getAttribLocation(program, "aPos");
@@ -146,9 +133,6 @@ export default class Wall {
         gl.bindBuffer(gl.ARRAY_BUFFER, this.uvBuf);
         gl.enableVertexAttribArray(uvLoc);
         gl.vertexAttribPointer(uvLoc, 2, gl.FLOAT, false, 0, 0);
-
-        //const colLoc = gl.getAttribLocation(program, "aColor");
-        //if (colLoc >= 0) gl.disableVertexAttribArray(colLoc);
 
         gl.activeTexture(gl.TEXTURE0);
         gl.bindTexture(gl.TEXTURE_2D, this.texture);

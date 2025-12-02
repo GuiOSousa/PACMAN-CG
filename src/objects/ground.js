@@ -93,9 +93,6 @@ export default class Floor {
         gl.enableVertexAttribArray(uvLoc);
         gl.vertexAttribPointer(uvLoc, 2, gl.FLOAT, false, 0, 0);
 
-        //const colLoc = gl.getAttribLocation(program, "aColor");
-        //if (colLoc >= 0) gl.disableVertexAttribArray(colLoc);
-
         gl.activeTexture(gl.TEXTURE0);
         gl.bindTexture(gl.TEXTURE_2D, this.texture);
         gl.uniform1i(gl.getUniformLocation(program, "uTexture"), 0);

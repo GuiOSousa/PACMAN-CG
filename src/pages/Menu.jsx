@@ -1,4 +1,3 @@
-//import { useEffect, useRef } from "react";
 import './Menu.css'
 
 export default function Menu() {

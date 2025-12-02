@@ -37,7 +37,6 @@ class MapNode {
                 const posX = x * scale;
                 const posZ = -y * scale;
 
-                
                 if (r === 255 && g === 0 && b === 0) {
                     this.scene.addObject(
                         new Wall(this.scene.gl, [posX, 0, posZ])
@@ -46,9 +45,7 @@ class MapNode {
                     continue
                 }
 
-                
                 this.navigation.push([posX, 0, posZ]);
-
                 
                 if (r === 0 && g === 255 && b === 0) {
                     const p = this.scene.player;
