@@ -7,6 +7,7 @@ import './Game.css'
 import PlayerCoordinatesDisplay from "../components/PlayerCoordinates.jsx";
 import ScoreDisplay from "../components/ScoreDisplay.jsx";
 import Floor from "../objects/ground.js";
+import Crystal from "../objects/crystal.js";
 
 export default function GameCanvas() {
 	const canvasRef = useRef(null);
@@ -43,6 +44,8 @@ export default function GameCanvas() {
 		Map.setScene(scene);
 		Map.loadFromImage("src/assets/map.png", 1);
 
+		scene.addObject(new Crystal(gl, [60, 1, -60]))
+
 		let last = performance.now();
 		function loop(now) {
 			const dt = Math.min((now - last) / 1000, 0.04);
@@ -53,6 +56,7 @@ export default function GameCanvas() {
 			requestAnimationFrame(loop);
 		}
 		requestAnimationFrame(loop);
+
 
 		return () => {
 			ro.disconnect();
