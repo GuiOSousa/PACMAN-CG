@@ -5,12 +5,13 @@ import PixelInterpreter from "../tools/pixelInterpreter.js";
 class MapNode {
 	walls
 	navigation
-	orbs
+	crystalSlots
 
 	constructor(scene) {
 		this.scene = scene;
 		this.walls = []
 		this.navigation = []
+        this.crystalSlots = []
 	}
 
 	setScene(s) {
@@ -56,10 +57,12 @@ class MapNode {
                 }
 
                 if (r === 0 && g === 0 && b === 255) {
-                    this.orbs.push([posX, 0, posZ]);
+                    this.crystalSlots.push([posX, 0, posZ])
                 }
             }
         }
+
+        return
     }
 }
 

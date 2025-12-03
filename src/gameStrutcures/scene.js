@@ -98,6 +98,10 @@ export default class Scene {
 
 			gl.uniformMatrix4fv(this.uMVP, false, mvp);
 
+			if (typeof obj.update === "function") {
+				obj.update(dt)
+			}
+
 			if (typeof obj.draw === "function") {
 				obj.draw(this.program, this.uMVP, view, proj);
 			}

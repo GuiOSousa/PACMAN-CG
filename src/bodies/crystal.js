@@ -33,7 +33,7 @@ export default class CrystalShape {
         ];
 
         const colors = [
-            ...Array(10).fill([0.8, 0.8, 0.8]).flat()
+            0.0, 0.5, 1.0,
         ];
 
         this.vertexBuffer = gl.createBuffer();
