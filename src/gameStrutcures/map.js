@@ -52,7 +52,7 @@ class MapNode {
                     const p = this.scene.player;
                     if (p?.camera) {
                         const newPos = [posX, 1.2, posZ];
-                        p.pos = newPos;
+                        p.position = newPos;
                     }
                 }
 

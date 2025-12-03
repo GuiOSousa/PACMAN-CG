@@ -7,7 +7,7 @@ import ColliderAux from "../tools/colliderAux.js";
 export default class Player {
 	constructor() {
 		this.camera = new Camera();
-		this.pos = [0, 0, 0]
+		this.position = [0, 0, 0]
 		this.speed = 3.0
 		this.keys = {}
 		this._setupInput()
@@ -70,26 +70,26 @@ export default class Player {
 				move[0] /= len;
 				move[2] /= len;
 				
-				move = this.colliderAux.getOrientedVector(move, this.pos)
+				move = this.colliderAux.getOrientedVector(move, this.position)
 
-				this.pos[0] += move[0] * this.speed * dt;
-				this.pos[2] += move[2] * this.speed * dt;
+				this.position[0] += move[0] * this.speed * dt;
+				this.position[2] += move[2] * this.speed * dt;
 			}
 
-			this.camera.setPosition(this.pos)
+			this.camera.setPosition(this.position)
 		}
 
-	update(dt) {
+	process(dt) {
 		this.handleInput(this.keys, dt);
 
 		variables.value = {
 			...variables.value,
-			playerPosition: [...Pathfinder.getClosestCell(this.pos)]
+			playerPosition: [...Pathfinder.getClosestCell(this.position)]
 		}
 	}
 
 	getDirectionPos(move) {
-		return [this.pos[0] + move[0], 0, this.pos[2] + move[2]]
+		return [this.position[0] + move[0], 0, this.position[2] + move[2]]
 	}
 
 	isPathBlocked(move) {

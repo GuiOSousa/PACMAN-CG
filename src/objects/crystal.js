@@ -14,7 +14,7 @@ export default class Crystal {
     }
 
     // eslint-disable-next-line no-unused-vars
-    update(dt) {
+    process(dt) {
         return
 	}
 

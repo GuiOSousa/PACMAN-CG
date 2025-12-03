@@ -2,7 +2,7 @@ import { M4 } from "../tools/m4.js";
 
 export default class Camera {
 	constructor() {
-		this.pos = [0, 1.2, 4]
+		this.position = [0, 1.2, 4]
 		this.yaw = 0
 		this.pitch = 0
 		this.speed = 3.0
@@ -21,9 +21,9 @@ export default class Camera {
 		];
 
 		const center = [
-			this.pos[0] + dir[0],
-			this.pos[1] + dir[1],
-			this.pos[2] + dir[2]
+			this.position[0] + dir[0],
+			this.position[1] + dir[1],
+			this.position[2] + dir[2]
 		];
 
 		if (Number.isNaN(dir[0]) || Number.isNaN(dir[1]) || Number.isNaN(dir[2])) {
@@ -31,12 +31,12 @@ export default class Camera {
 		}
 
 
-		return M4.setViewingMatrix(this.pos, center, [0, 1, 0]);
+		return M4.setViewingMatrix(this.position, center, [0, 1, 0]);
 	}
 
 	
 	setPosition(p) {
-		this.pos = p
+		this.position = p
 	}
 
 	getDirection() {

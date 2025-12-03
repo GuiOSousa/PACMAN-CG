@@ -38,7 +38,7 @@ export default function GameCanvas() {
 			resize();
 
 			const scene = new Scene(gl)
-			scene.addEntity(new Enemy(gl, [42, 0, -36], scene))
+			scene.addEntity(new Enemy(gl, [42, 1, -36], scene))
 			
 			const floor = new Floor(gl, [0, 0, -121], [121,121])
 			scene.addObject(floor);
@@ -53,8 +53,7 @@ export default function GameCanvas() {
 			function loop(now) {
 				const dt = Math.min((now - last) / 1000, 0.04);
 				last = now;
-				scene.player.update(dt);
-				scene.render(dt);
+				scene.process(dt);
 
 				requestAnimationFrame(loop);
 			}

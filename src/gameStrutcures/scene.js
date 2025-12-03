@@ -8,7 +8,7 @@ export default class Scene {
 		this.uMVP = gl.getUniformLocation(this.program, "uMVP");
 		this.player = new Player();
 		this.objects = [];
-		this.entities = []
+		this.entities = [this.player]
 	}
 
 	createProgram() {
@@ -28,8 +28,8 @@ export default class Scene {
 			vUV = aUV;
 			vColor = aColor;
 		}
-
 		`;
+
 		const fs = `
 		precision mediump float;
 
@@ -47,6 +47,7 @@ export default class Scene {
 			}
 		}
 		`;
+
 		const compile = (src, type) => {
 		const s = gl.createShader(type);
 		gl.shaderSource(s, src);
@@ -75,7 +76,7 @@ export default class Scene {
 		this.entities.push(ett)
 	}
 
-	render(dt) {
+	process(dt) {
 		const gl = this.gl
 
 		gl.enable(gl.DEPTH_TEST)
@@ -98,8 +99,8 @@ export default class Scene {
 
 			gl.uniformMatrix4fv(this.uMVP, false, mvp);
 
-			if (typeof obj.update === "function") {
-				obj.update(dt)
+			if (typeof obj.process === "function") {
+				obj.process(dt)
 			}
 
 			if (typeof obj.draw === "function") {
@@ -123,7 +124,7 @@ export default class Scene {
 				ett.draw(this.program, this.uMVP, view, proj);
 			}
 
-			ett.update(dt)
+			ett.process(dt)
 		}
 	}
 }

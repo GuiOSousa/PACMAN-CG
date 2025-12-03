@@ -16,14 +16,14 @@ export default class Enemy {
 		this.body = new Body(gl, this.position)
 	}
 
-	update(dt) {
+	process(dt) {
 		const player = this.scene.player
 		if (!player) return
 		this.repathTimer += dt
 
 		if (this.repathTimer > 2.0 || this.path.length === 0) {
 			this.repathTimer = 0;
-			this.path = Pathfinder.findPathBFS(this.position, player.pos, Map.navigation)
+			this.path = Pathfinder.findPathBFS(this.position, player.position, Map.navigation)
 			this.pathIndex = 0
 		}
 
@@ -56,6 +56,6 @@ export default class Enemy {
 
 	isPlayerReach() {
 		const player = this.scene.player
-		return Pathfinder.getClosestCell(player.pos) == Pathfinder.getClosestCell(this.position)
+		return Pathfinder.getClosestCell(player.position) == Pathfinder.getClosestCell(this.position)
 	}
 }
