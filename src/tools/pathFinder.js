@@ -1,4 +1,10 @@
 export default class Pathfinder {
+    static isSameCell(a, b) {
+        const cellA = this.getClosestCell(a)
+        const cellB = this.getClosestCell(b)
+        return cellA[0] == cellB[0] && cellA[1] == cellB[1]
+    }
+    
     static getClosestCell(pos) {
         const cell = [Math.round(pos[0]), Math.round(pos[2])]
 		return cell

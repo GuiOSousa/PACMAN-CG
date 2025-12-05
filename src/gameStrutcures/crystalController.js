@@ -1,4 +1,5 @@
 import Crystal from "../objects/crystal";
+import variables from "../reactSignals/signal";
 import Map from "./map"
 
 export default class CrystalController {
@@ -20,22 +21,18 @@ export default class CrystalController {
 
     getRandomFreeSlot() {
         const options = Map.crystalSlots.filter(s => !this.crystals.some(c => c == s))
-        
-        console.log(options)
-
         this.shuffle(options)
-
         return options[0]
     }
 
     addCrystal(slot) {
-        this.scene.addObject(new Crystal(this.scene.gl, slot))
+        this.scene.addObject(new Crystal(this.scene.gl, slot, this.scene, this))
         this.freeSlots.filter(e => e != slot)
         this.crystals.push(slot)
     }
 
-    removeCrystal() {
-
+    removeCrystal(crystal) {
+        this.scene.removeObject(crystal)
     }
 
     addCrystals(n = -1) {
@@ -44,15 +41,19 @@ export default class CrystalController {
         const count = this.crystalSlots.length
 
         if (n == -1) {
-            n = Math.ceil(count/1)
+            n = Math.ceil(count/5)
         }
-
-        console.log(n)
 
         for (let i = 0; i < n; i++) {
             const slot = this.getRandomFreeSlot()
             this.addCrystal(slot)
         }
 
+    }
+
+    crystalCollected(crystal) {
+        variables.value.score += 10
+        this.removeCrystal(crystal)
+        this.addCrystals(1)
     }
 }

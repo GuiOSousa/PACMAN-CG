@@ -24,31 +24,6 @@ export default class ColliderAux {
     getOrientedVector(vec, pos) {
         // eslint-disable-next-line no-unused-vars
         const [x, y, z] = vec;
-
-        const right = [z, -x];
-        const left  = [-z, x];
-
-        const sideOffset = 0.35;
-        const forwardOffset = 0.6;
-
-        const px = pos[0];
-        const pz = pos[2];
-
-        const rightPos = [
-            px + x * forwardOffset + right[0] * sideOffset,
-            0,
-            pz + z * forwardOffset + right[1] * sideOffset
-        ];
-
-        const leftPos = [
-            px + x * forwardOffset + left[0] * sideOffset,
-            0,
-            pz + z * forwardOffset + left[1] * sideOffset
-        ];
-
-        const rightBlocked = Map.isWall(rightPos);
-        const leftBlocked  = Map.isWall(leftPos);
-
         let xFinal = x
         let zFinal = z
 
@@ -62,10 +37,7 @@ export default class ColliderAux {
 
         [xFinal, zFinal] = this.removeBlocked(vec, pos, xFinal, zFinal)
 
-        if (rightBlocked || leftBlocked) {
-            return [xFinal, 0, zFinal]
-        }
-        return vec
+        return [xFinal, 0, zFinal]
     }
 
 

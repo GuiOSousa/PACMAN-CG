@@ -72,6 +72,10 @@ export default class Scene {
 		this.objects.push(obj);
 	}
 
+	removeObject(obj) {
+		this.objects = this.objects.filter(o => o.position !== obj.position)
+	}
+
 	addEntity(ett) {
 		this.entities.push(ett)
 	}
@@ -91,7 +95,6 @@ export default class Scene {
 			const model = M4.multiply(
 				M4.translate(M4.identity, ...(obj.position)),
 				M4.yRotate(M4.identity, obj.rotation)
-
 			)
 			
 			const viewModel = M4.multiply(view, model);
@@ -102,7 +105,6 @@ export default class Scene {
 			if (typeof obj.process === "function") {
 				obj.process(dt)
 			}
-
 			if (typeof obj.draw === "function") {
 				obj.draw(this.program, this.uMVP, view, proj);
 			}
@@ -112,7 +114,6 @@ export default class Scene {
 			const model = M4.multiply(
 				M4.translate(M4.identity, ...(ett.position)),
 				M4.yRotate(M4.identity, ett.rotation)
-
 			)
 
 			const viewModel = M4.multiply(view, model);
@@ -123,7 +124,6 @@ export default class Scene {
 			if (typeof ett.draw === "function") {
 				ett.draw(this.program, this.uMVP, view, proj);
 			}
-
 			ett.process(dt)
 		}
 	}

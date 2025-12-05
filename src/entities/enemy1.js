@@ -2,18 +2,21 @@ import { M4 } from "../tools/m4.js";
 import Body from "../bodies/enemy1.js";
 import Pathfinder from "../tools/pathFinder.js";
 import Map from "../gameStrutcures/map.js";
+import CollisionChecker from "../tools/collisionChecker.js";
 
 export default class Enemy {
 	constructor(gl, startPos = [0, 0, 0], scene) {
 		this.gl = gl
 		this.scene = scene
 		this.position = [...startPos]
-		this.speed = 1.5
+		this.speed = 3
 		this.path = []
 		this.pathIndex = 0
 		this.repathTimer = 0
 
 		this.body = new Body(gl, this.position)
+
+		this.collisionChecker = new CollisionChecker(scene.player)
 	}
 
 	process(dt) {
