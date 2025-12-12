@@ -105,6 +105,14 @@ export default class ModelOBJ {
         // -------------------------------
         gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.indexBuffer);
 
+
+        gl.uniformMatrix4fv(
+            gl.getUniformLocation(program, "uModel"),
+            false,
+            new Float32Array(model)
+        );
+
+
         // OBJ não tem textura → força uHasTexture = false
         const uHasTexture = gl.getUniformLocation(program, "uHasTexture");
         gl.uniform1i(uHasTexture, 0);

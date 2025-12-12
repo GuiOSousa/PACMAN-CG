@@ -3,9 +3,12 @@ import Map from "../gameStrutcures/map.js";
 import variables from "../reactSignals/signal.js";
 import Pathfinder from "../tools/pathFinder.js";
 import ColliderAux from "../tools/colliderAux.js";
+import Flashlight from "../light/flashlight.js";
 
 export default class Player {
-	constructor() {
+	constructor(scene) {
+		this.scene = scene
+
 		this.camera = new Camera();
 		this.position = [0, 0, 0]
 		this.speed = 3.0
@@ -13,6 +16,10 @@ export default class Player {
 		this._setupInput()
 		this._setupMouse()
 		this.colliderAux = new ColliderAux
+
+		const fl = new Flashlight(this.scene.gl, this.scene.program)
+		this.flashlight = fl
+		fl.setCamera(this.camera)
 	}
 
 	_setupInput() {
@@ -45,7 +52,6 @@ export default class Player {
 			}
 		});
 	}
-
 
 	handleInput(keys, dt) {
 			const forward = this.camera.getDirection()
@@ -86,6 +92,8 @@ export default class Player {
 			...variables.value,
 			playerPosition: [...Pathfinder.getClosestCell(this.position)]
 		}
+
+		this.flashlight.process(dt)
 	}
 
 	getDirectionPos(move) {

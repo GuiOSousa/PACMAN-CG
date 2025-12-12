@@ -119,6 +119,12 @@ export default class Wall {
             M4.yRotation(this.rotation)
         );
 
+        gl.uniformMatrix4fv(
+            gl.getUniformLocation(program, "uModel"),
+            false,
+            new Float32Array(model)
+        );
+        
         const mvp = M4.multiply(proj, M4.multiply(view, model));
         gl.uniformMatrix4fv(uMVP, false, mvp);
 
