@@ -44,7 +44,7 @@ export default function GameCanvas() {
 			scene.addObject(floor);
 
 			Map.setScene(scene);
-			await Map.loadFromImage("public/assets/map.png", 1);
+			await Map.loadFromImage("/assets/map.png", 1);
 
 			const cc = new CrystalController(scene)
 			cc.addCrystals()
