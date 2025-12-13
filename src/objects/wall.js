@@ -85,7 +85,7 @@ export default class Wall {
 
         this.indexCount = indexes.length;
 
-        this.loadTexture("src/assets/wall.png")
+        this.loadTexture("public/assets/wall.png")
     }
 
     loadTexture(url) {

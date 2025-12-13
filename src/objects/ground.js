@@ -45,7 +45,7 @@ export default class Floor {
 
         this.indexCount = indexes.length;
 
-        this.loadTexture("src/assets/ground.png");
+        this.loadTexture("public/assets/ground.png");
     }
 
     loadTexture(url) {
