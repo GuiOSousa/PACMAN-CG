@@ -5,24 +5,21 @@ import CollisionChecker from "../tools/collisionChecker.js";
 import GhostBody from "../bodies/enemy1.js";
 import BasicEnemy from "./basicEnemy.js";
 
-export default class Enemy extends BasicEnemy {
-	constructor(gl, startPos = [0, 0, 0], scene) {
+export default class RouteGhost extends BasicEnemy {
+	constructor(gl, startPos = [0, 0, 0], scene, basePath) {
 		super(gl, startPos, scene)
 
 		this.body = new GhostBody(gl, this.position, this)
+        this.basePath = basePath
+        this.path = [...basePath]
 	}
 
 	process(dt) {
 		const player = this.scene.player
 		if (!player) return
-		this.repathTimer += dt
-
-		if (this.repathTimer > 2.0 || this.path.length === 0) {
-			this.repathTimer = 0;
-			this.path = Pathfinder.findPathBFS(this.position, player.position, Map.navigation)
-			this.pathIndex = 0
-		}
-
 		this.followPath(dt)
+        if (this.pathIndex == this.path.length) {
+            this.pathIndex = 0
+        }
 	}
 }

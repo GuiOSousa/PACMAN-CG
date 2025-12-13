@@ -9,6 +9,7 @@ import ScoreDisplay from "../components/ScoreDisplay.jsx";
 import Floor from "../objects/ground.js";
 import Crystal from "../objects/crystal.js";
 import CrystalController from "../gameStrutcures/crystalController.js";
+import RouteGhost from "../entities/routeGhost.js";
 
 export default function GameCanvas() {
 	const canvasRef = useRef(null);
@@ -39,6 +40,13 @@ export default function GameCanvas() {
 
 			const scene = new Scene(gl)
 			scene.addEntity(new Enemy(gl, [42, 1, -36], scene))
+
+			const routes = [
+				[[49, 1, -57], [49, 1, -80], [43, 1, -80], [43, 1, -72], [41, 1, -72], [41, 1, -80], [37, 1, -80], [37, 1, -68], [48, 1, -68], [48, 1, -66] [37, 1, -66], [37, 1, -57],],
+			]
+			routes.forEach(r => {
+				scene.addEntity(new RouteGhost(gl, r[0], scene, r))
+			})
 			
 			const floor = new Floor(gl, [0, 0, -121], [121,121])
 			scene.addObject(floor);

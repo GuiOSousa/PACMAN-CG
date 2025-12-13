@@ -45,29 +45,39 @@ export default class Floor {
 
         this.indexCount = indexes.length;
 
-        this.loadTexture("public/assets/ground.png");
+        this.loadTexture("/assets/ground.png");
     }
 
     loadTexture(url) {
         const gl = this.gl;
         const tex = gl.createTexture();
         const img = new Image();
-        img.src = url;
 
         img.onload = () => {
             gl.bindTexture(gl.TEXTURE_2D, tex);
-            gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, img);
+            gl.texImage2D(
+                gl.TEXTURE_2D,
+                0,
+                gl.RGBA,
+                gl.RGBA,
+                gl.UNSIGNED_BYTE,
+                img
+            );
 
             gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.REPEAT);
             gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.REPEAT);
-
-            gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
             gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR_MIPMAP_LINEAR);
+            gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
 
             gl.generateMipmap(gl.TEXTURE_2D);
-
             this.texture = tex;
         };
+
+        img.onerror = () => {
+            console.error("Erro ao carregar textura:", url);
+        };
+
+        img.src = url;
     }
 
     draw(program, uMVP, view, proj) {
