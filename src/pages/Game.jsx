@@ -12,6 +12,7 @@ import CrystalController from "../gameStrutcures/crystalController.js";
 import RouteGhost from "../entities/routeGhost.js";
 import { GameEvents } from "../events/events.js";
 import { useNavigate } from "react-router-dom";
+import variables from "../events/signal.js";
 
 export default function GameCanvas() {
 	const canvasRef = useRef(null);
@@ -50,6 +51,7 @@ export default function GameCanvas() {
 
 			const routes = [
 				[[49, 1, -57], [49, 1, -80], [43, 1, -80], [43, 1, -72], [41, 1, -72], [41, 1, -80], [37, 1, -80], [37, 1, -68], [48, 1, -68], [48, 1, -66] [37, 1, -66], [37, 1, -57],],
+				[[70, 1, -69], [114, 1, -69], [114, 1, -85], [103, 1, -85], [103, 1, -88], [119, 1, -88], [119, 1, -91], [108, 1, -91], [108, 1, -102], [101, 1, -102], [101, 1, -93], [97, 1, -93], [97, 1, -93], [97, 1, -81], [103, 1, -81], [103, 1, -75], [98, 1, -75], [98, 1, -70], [94, 1, -70], [94, 1, -76], [78, 1, -76], [78, 1, -75], [75, 1, -75], [75, 1, -81], [70, 1, -81]]
 			]
 			routes.forEach(r => {
 				scene.addEntity(new RouteGhost(gl, r[0], scene, r))
@@ -75,6 +77,7 @@ export default function GameCanvas() {
 			requestAnimationFrame(loop);
 
 			window.addEventListener(GameEvents.GAME_OVER, onGameOver)
+			variables.value.score = 0
 
 			return () => {
 				ro.disconnect();

@@ -1,0 +1,10 @@
+.DeathScreen {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100vw;
+}
+
+.PlayButton {
+    font-size: 3rem;
+}

@@ -2,7 +2,7 @@ import { M4 } from "../tools/m4.js";
 import Pathfinder from "../tools/pathFinder.js";
 import Map from "../gameStrutcures/map.js";
 import CollisionChecker from "../tools/collisionChecker.js";
-import GhostBody from "../bodies/enemy1.js";
+import GhostBody from "../bodies/routeGhost.js";
 import BasicEnemy from "./basicEnemy.js";
 
 export default class RouteGhost extends BasicEnemy {
