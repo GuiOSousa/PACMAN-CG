@@ -10,13 +10,20 @@ import Floor from "../objects/ground.js";
 import Crystal from "../objects/crystal.js";
 import CrystalController from "../gameStrutcures/crystalController.js";
 import RouteGhost from "../entities/routeGhost.js";
+import { GameEvents } from "../events/events.js";
+import { useNavigate } from "react-router-dom";
 
 export default function GameCanvas() {
 	const canvasRef = useRef(null);
+	const navigate = useNavigate();
 
 	useEffect(() => {
+		const onGameOver = () => {
+			navigate("/gameOver");
+		};
+
 		async function loadGame() {
-				const canvas = canvasRef.current;
+			const canvas = canvasRef.current;
 
 			const gl = canvas.getContext("webgl", { antialias: true });
 			if (!gl) {
@@ -66,6 +73,8 @@ export default function GameCanvas() {
 				requestAnimationFrame(loop);
 			}
 			requestAnimationFrame(loop);
+
+			window.addEventListener(GameEvents.GAME_OVER, onGameOver)
 
 			return () => {
 				ro.disconnect();

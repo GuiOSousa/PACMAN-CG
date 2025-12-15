@@ -1,5 +1,5 @@
 import Crystal from "../objects/crystal";
-import variables from "../reactSignals/signal";
+import variables from "../events/signal";
 import Map from "./map"
 
 export default class CrystalController {

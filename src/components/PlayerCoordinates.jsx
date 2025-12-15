@@ -1,4 +1,4 @@
-import variables from "../reactSignals/signal"
+import variables from "../events/signal"
 import "./PlayerCoordinates.css"
 
 const PlayerCoordinatesDisplay = () => {

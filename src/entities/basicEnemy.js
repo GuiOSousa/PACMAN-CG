@@ -1,3 +1,4 @@
+import { GameEvents } from "../events/events"
 import CollisionChecker from "../tools/collisionChecker"
 import Pathfinder from "../tools/pathFinder"
 
@@ -22,7 +23,9 @@ export default class BasicEnemy {
     followPath(dt) {
         if (this.path.length > 0 && this.pathIndex < this.path.length) {
 			const target = this.path[this.pathIndex];
-			const dir = [
+			if (!target) {return}
+            
+            const dir = [
 				target[0] - this.position[0],
 				0,
 				target[2] - this.position[2],
@@ -40,6 +43,9 @@ export default class BasicEnemy {
 			}
 		}
 		this.body.position = [...this.position]
+		if (this.isPlayerReach()) {
+			window.dispatchEvent( new CustomEvent(GameEvents.GAME_OVER) );
+		}
     }
 
 	// eslint-disable-next-line no-unused-vars
@@ -50,7 +56,6 @@ export default class BasicEnemy {
 	}
 
 	isPlayerReach() {
-		const player = this.scene.player
-		return Pathfinder.getClosestCell(player.position) == Pathfinder.getClosestCell(this.position)
+		return this.collisionChecker.isColliding(this.position)
 	}
 }

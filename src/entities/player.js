@@ -1,6 +1,6 @@
 import Camera from "./camera.js";
 import Map from "../gameStrutcures/map.js";
-import variables from "../reactSignals/signal.js";
+import variables from "../events/signal.js";
 import Pathfinder from "../tools/pathFinder.js";
 import ColliderAux from "../tools/colliderAux.js";
 import Flashlight from "../light/flashlight.js";
