@@ -82,7 +82,7 @@ export default function GameCanvas() {
 		}
 
 		loadGame()
-	}, [])
+	}, [navigate])
 
 	return (
 		<>

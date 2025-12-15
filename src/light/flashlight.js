@@ -8,13 +8,13 @@ export default class Flashlight {
         this.uAmbientLightColor  = gl.getUniformLocation(program, "uAmbientLightColor");
         this.uCutOff             = gl.getUniformLocation(program, "uCutOff");
         this.uOuterCutOff        = gl.getUniformLocation(program, "uOuterCutOff");
+        this.flashlightIntensity = gl.getUniformLocation(program, "flashlightIntensity");
 
         this.camera
 
-        // Configuração inicial da lanterna
-        this.ambient = [1.0, 1.0, 1.0];          // luz ambiente fraca
-        this.innerAngle = 12 * Math.PI / 180;    // cone interno (12°)
-        this.outerAngle = 20 * Math.PI / 180;    // externo (20°)
+        this.ambient = [0.1, 0.1, 0.1];
+        this.innerAngle = 12 * Math.PI / 180;
+        this.outerAngle = 20 * Math.PI / 180;
     }
 
     setCamera(camera) {
@@ -33,21 +33,17 @@ export default class Flashlight {
 
         gl.useProgram(this.program);
 
-        // Posição
         gl.uniform3fv(this.uLightPosition, this.position);
 
-        // Direção (já normalizada pela própria câmera)
         gl.uniform3fv(this.uLightDirection, this.direction);
 
-        // Luz ambiente
         gl.uniform3fv(this.uAmbientLightColor, this.ambient);
 
-        // Ângulos do cone (shader usa cos)
+        gl.uniform1f(this.flashlightIntensity, 8.0)
         gl.uniform1f(this.uCutOff, Math.cos(this.innerAngle));
         gl.uniform1f(this.uOuterCutOff, Math.cos(this.outerAngle));
     }
 
-    // Se futuramente quiser efeitos
     setIntensity(val) {
         this.intensity = val;
     }

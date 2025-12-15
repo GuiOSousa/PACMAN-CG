@@ -19,7 +19,7 @@ export default class Scene {
 		attribute vec3 aColor;
 
 		uniform mat4 uMVP;
-		uniform mat4 uModel;   // vamos adicionar só isso — simples!
+		uniform mat4 uModel;
 
 		varying vec2 vUV;
 		varying vec3 vColor;
@@ -28,12 +28,9 @@ export default class Scene {
 
 		void main() {
 
-			// posição no MUNDO (world space)
 			vec4 worldPos = uModel * vec4(aPos, 1.0);
 			v_position = worldPos.xyz;
 
-			// normal aproximada derivada da geometria
-			// funciona bem em paredes verticais sem enviar a_normal
 			v_normal = normalize(aPos);
 
 			vUV = aUV;
@@ -55,44 +52,34 @@ export default class Scene {
 		uniform sampler2D uTexture;
 		uniform bool uHasTexture;
 
-		// Luz ambiente (cor constante fraca)
 		uniform vec3 uAmbientLightColor;
 
-		// Spotlight
 		uniform vec3 uLightPosition;   
 		uniform vec3 uLightDirection;  
 		uniform float uCutOff;         
 		uniform float uOuterCutOff;    
+		uniform float flashlightIntensity;
 
 		void main() {
-
-			// Cor base (textura ou cor)
 			vec4 baseColor =
 				uHasTexture ? texture2D(uTexture, vUV)
 							: vec4(vColor, 1.0);
 
-			// Direção da luz → para o fragmento
 			vec3 lightDir = normalize(uLightPosition - v_position);
 
-			// Direção da lanterna
 			vec3 lightDirection = normalize(uLightDirection);
 
-			// Ângulo entre o fragmento e o centro do cone da lanterna
 			float theta = dot(lightDir, -lightDirection);
 
-			// Intensidade do cone (spotlight)
 			float intensity = smoothstep(uOuterCutOff, uCutOff, theta);
 
-			// Difusa
 			vec3 normal = normalize(v_normal);
 			float diff = max(dot(normal, lightDir), 0.0);
 
-			vec3 diffuse = diff * intensity * uAmbientLightColor;
+			vec3 diffuse = diff * intensity * uAmbientLightColor * flashlightIntensity;
 
-			// Ambiente simples
 			vec3 ambient = uAmbientLightColor * 0.25;
 
-			// Resultado final
 			vec3 result = ambient + diffuse;
 
 			gl_FragColor = vec4(result, 1.0) * baseColor;
