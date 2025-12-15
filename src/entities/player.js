@@ -4,6 +4,7 @@ import variables from "../events/signal.js";
 import Pathfinder from "../tools/pathFinder.js";
 import ColliderAux from "../tools/colliderAux.js";
 import Flashlight from "../light/flashlight.js";
+import PlayerBody from "../bodies/player.js";
 
 export default class Player {
 	constructor(scene) {
@@ -20,6 +21,13 @@ export default class Player {
 		const fl = new Flashlight(this.scene.gl, this.scene.program)
 		this.flashlight = fl
 		fl.setCamera(this.camera)
+
+		this.body = new PlayerBody(scene.gl, this.position, this)
+	}
+
+	setBody(newBody) {
+		this.body = newBody
+		console.log(this.body)
 	}
 
 	_setupInput() {
@@ -93,7 +101,19 @@ export default class Player {
 			playerPosition: [...Pathfinder.getClosestCell(this.position)]
 		}
 
+		this.body.position = [this.position[0], 1.0, this.position[2]]
+
+		const dir = this.camera.getDirection();
+        this.body.position[0] += dir[0] * 0.25;
+        this.body.position[2] += dir[2] * 0.25;
+
+		this.body.rotation = -this.camera.yaw + 1.72
+		
 		this.flashlight.process(dt)
+	}
+
+	draw(program, uMVP, view, proj) {
+		this.body.draw(program, uMVP, view, proj)
 	}
 
 	getDirectionPos(move) {

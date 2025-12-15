@@ -51,7 +51,13 @@ export default class ModelOBJ {
         gl.useProgram(program);
 
         let model = M4.identity()
-        model = M4.multiply(M4.translation(...this.position), M4.scale(model, this.scale, this.scale, this.scale))  
+        model = M4.multiply(
+            M4.translation(...this.position),
+            M4.multiply(
+                M4.yRotation(this.rotation),
+                M4.scale(M4.identity(), this.scale, this.scale, this.scale)
+            )
+        );
         const viewModel = M4.multiply(view, model);
         const mvp = M4.multiply(proj, viewModel);
         gl.uniformMatrix4fv(uMVP, false, mvp);
