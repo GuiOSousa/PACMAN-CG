@@ -5,8 +5,8 @@ export default function DeathScreen() {
     return(
     <div className='DeathScreen'>
         <h1>GAME OVER</h1>
-        <h2>Score: {variables.value.score}</h2>
-        <a href="/" className='PlayButton'>Voltar ao Menu</a>
+        <h2 className='Score'>Pontuação: {variables.value.score}</h2>
+        <a href="/" className='MenuButton'>Voltar ao Menu</a>
     </div>
     )
 }

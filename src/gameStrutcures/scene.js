@@ -44,7 +44,6 @@ export default class Scene {
 		precision mediump float;
 		#endif
 
-		// ativa as derivadas (necessário em WebGL1)
 		#extension GL_OES_standard_derivatives : enable
 
 		varying vec2 vUV;
@@ -54,10 +53,8 @@ export default class Scene {
 		uniform sampler2D uTexture;
 		uniform bool uHasTexture;
 
-		// Luz ambiente
 		uniform vec3 uAmbientLightColor;
 
-		// Spotlight
 		uniform vec3 uLightPosition;
 		uniform vec3 uLightDirection;
 		uniform float uCutOff;
@@ -68,15 +65,12 @@ export default class Scene {
 
 			vec4 baseColor = uHasTexture ? texture2D(uTexture, vUV) : vec4(vColor, 1.0);
 
-			// Calcular normal pelo gradiente das posições no espaço-mundo
-			// dFdx/dFdy operam sobre v_position (vec3) e retornam vec3 quando extensão ativada
 			vec3 dx = dFdx(v_position);
 			vec3 dy = dFdy(v_position);
 			vec3 normal = normalize(cross(dx, dy));
 
-			// defeito de sinal pode acontecer dependendo da ordem; corrigimos com abs se necessário
 			if (length(normal) == 0.0) {
-				normal = vec3(0.0, 1.0, 0.0); // fallback
+				normal = vec3(0.0, 1.0, 0.0);
 			}
 
 			vec3 lightDir = normalize(uLightPosition - v_position);

@@ -69,39 +69,32 @@ export default class Renderable {
             M4.yRotation(this.rotation)
         );
 
-        // uModel
         gl.uniformMatrix4fv(
             gl.getUniformLocation(program, "uModel"),
             false,
             new Float32Array(model)
         );
 
-        // MVP
         const viewModel = M4.multiply(view, model);
         const mvp = M4.multiply(proj, viewModel);
         gl.uniformMatrix4fv(uMVP, false, mvp);
 
-        // Texture active
         gl.uniform1i(gl.getUniformLocation(program, "uHasTexture"), 1);
 
-        // Position
         const aPos = gl.getAttribLocation(program, "aPos");
         gl.bindBuffer(gl.ARRAY_BUFFER, this.vertexBuffer);
         gl.enableVertexAttribArray(aPos);
         gl.vertexAttribPointer(aPos, 3, gl.FLOAT, false, 0, 0);
 
-        // UV
         const aUV = gl.getAttribLocation(program, "aUV");
         gl.bindBuffer(gl.ARRAY_BUFFER, this.uvBuffer);
         gl.enableVertexAttribArray(aUV);
         gl.vertexAttribPointer(aUV, 2, gl.FLOAT, false, 0, 0);
 
-        // Texture
         gl.activeTexture(gl.TEXTURE0);
         gl.bindTexture(gl.TEXTURE_2D, this.texture);
         gl.uniform1i(gl.getUniformLocation(program, "uTexture"), 0);
 
-        // Indexes
         gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.indexBuffer);
         gl.drawElements(gl.TRIANGLES, this.indexCount, gl.UNSIGNED_SHORT, 0);
     }
