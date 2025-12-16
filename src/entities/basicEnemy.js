@@ -1,4 +1,5 @@
 import { GameEvents } from "../events/events"
+import variables from "../events/signal"
 import CollisionChecker from "../tools/collisionChecker"
 import Pathfinder from "../tools/pathFinder"
 
@@ -7,7 +8,8 @@ export default class BasicEnemy {
 		this.gl = gl
 		this.scene = scene
 		this.position = [...startPos]
-		this.speed = 3
+		this.baseSpeed = 3
+		this.speed = this.baseSpeed
 		this.path = []
 		this.pathIndex = 0
 		this.repathTimer = 0
@@ -21,6 +23,9 @@ export default class BasicEnemy {
 	}
 
     followPath(dt) {
+		this.speed = this.baseSpeed + ((variables.value.difficulty - 1) * 0.5)
+
+
         if (this.path.length > 0 && this.pathIndex < this.path.length) {
 			const target = this.path[this.pathIndex];
 			if (!target) {return}

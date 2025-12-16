@@ -3,10 +3,12 @@ import "./PlayerCoordinates.css"
 
 const ScoreDisplay = () => {
     const score = variables.value.score
+    const difficulty = variables.value.difficulty
     
     return(
         <div className="coords">
-        <p>Score: {score}</p>
+        <p>Pontuação: {score}</p>
+        <p>Dificuldade: {difficulty}</p>
         </div>
     )
 }

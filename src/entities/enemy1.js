@@ -6,7 +6,8 @@ import ChaseGhostBody from "../bodies/chaseGhost.js";
 export default class Enemy extends BasicEnemy {
 	constructor(gl, startPos = [0, 0, 0], scene) {
 		super(gl, startPos, scene)
-		this.speed = 5
+		this.baseSpeed = 5
+		this.speed = this.baseSpeed
 		this.body = new ChaseGhostBody(gl, this.position, this)
 	}
 

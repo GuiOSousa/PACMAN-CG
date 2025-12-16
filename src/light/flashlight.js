@@ -39,7 +39,7 @@ export default class Flashlight {
 
         gl.uniform3fv(this.uAmbientLightColor, this.ambient);
 
-        gl.uniform1f(this.flashlightIntensity, 8.0)
+        gl.uniform1f(this.flashlightIntensity, 1.0)
         gl.uniform1f(this.uCutOff, Math.cos(this.innerAngle));
         gl.uniform1f(this.uOuterCutOff, Math.cos(this.outerAngle));
     }

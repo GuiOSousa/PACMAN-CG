@@ -29,9 +29,10 @@ export default class CrystalShape extends Renderable {
             5, 4, 1,
         ];
 
-        const colors = [
-            0.0, 0.5, 1.0,
-        ];
+        const colors = [];
+        for (let i = 0; i < vertices.length / 3; i++) {
+            colors.push(...[0.0, 0.7, 1.0])
+        }
 
         this.vertices = vertices
         this.indexes = indexes

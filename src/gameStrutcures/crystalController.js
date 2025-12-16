@@ -53,6 +53,7 @@ export default class CrystalController {
 
     crystalCollected(crystal) {
         variables.value.score += 10
+        variables.value.difficulty = 1 + Math.floor(variables.value.score / 250)
         this.removeCrystal(crystal)
         this.addCrystals(1)
     }

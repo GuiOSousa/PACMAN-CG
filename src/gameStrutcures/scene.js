@@ -13,6 +13,11 @@ export default class Scene {
 
 	createProgram() {
 		const gl = this.gl;
+		const derivExt = gl.getExtension && (gl.getExtension('OES_standard_derivatives') || gl.getExtension('EXT_shader_texture_lod'));
+		if (!derivExt) {
+			console.warn('OES_standard_derivatives não disponível — dFdx/dFdy vão falhar. Considere usar WebGL2 ou gerar normais na CPU.');
+		}
+
 		const vs = `
 		attribute vec3 aPos;
 		attribute vec2 aUV;
@@ -22,63 +27,68 @@ export default class Scene {
 		uniform mat4 uModel;
 
 		varying vec2 vUV;
-		varying vec3 vColor;
-		varying vec3 v_normal;
 		varying vec3 v_position;
+		varying vec3 vColor;
 
 		void main() {
-
 			vec4 worldPos = uModel * vec4(aPos, 1.0);
 			v_position = worldPos.xyz;
-
-			v_normal = normalize(aPos);
-
 			vUV = aUV;
 			vColor = aColor;
-
 			gl_Position = uMVP * vec4(aPos, 1.0);
 		}
-
 		`;
 
 		const fs = `
+		#ifdef GL_ES
 		precision mediump float;
+		#endif
+
+		// ativa as derivadas (necessário em WebGL1)
+		#extension GL_OES_standard_derivatives : enable
 
 		varying vec2 vUV;
-		varying vec3 vColor;
-		varying vec3 v_normal;
 		varying vec3 v_position;
+		varying vec3 vColor;
 
 		uniform sampler2D uTexture;
 		uniform bool uHasTexture;
 
+		// Luz ambiente
 		uniform vec3 uAmbientLightColor;
 
-		uniform vec3 uLightPosition;   
-		uniform vec3 uLightDirection;  
-		uniform float uCutOff;         
-		uniform float uOuterCutOff;    
+		// Spotlight
+		uniform vec3 uLightPosition;
+		uniform vec3 uLightDirection;
+		uniform float uCutOff;
+		uniform float uOuterCutOff;
 		uniform float flashlightIntensity;
 
 		void main() {
-			vec4 baseColor =
-				uHasTexture ? texture2D(uTexture, vUV)
-							: vec4(vColor, 1.0);
+
+			vec4 baseColor = uHasTexture ? texture2D(uTexture, vUV) : vec4(vColor, 1.0);
+
+			// Calcular normal pelo gradiente das posições no espaço-mundo
+			// dFdx/dFdy operam sobre v_position (vec3) e retornam vec3 quando extensão ativada
+			vec3 dx = dFdx(v_position);
+			vec3 dy = dFdy(v_position);
+			vec3 normal = normalize(cross(dx, dy));
+
+			// defeito de sinal pode acontecer dependendo da ordem; corrigimos com abs se necessário
+			if (length(normal) == 0.0) {
+				normal = vec3(0.0, 1.0, 0.0); // fallback
+			}
 
 			vec3 lightDir = normalize(uLightPosition - v_position);
-
 			vec3 lightDirection = normalize(uLightDirection);
 
-			float theta = dot(lightDir, -lightDirection);
-
+			float theta = dot(-lightDir, lightDirection);
 			float intensity = smoothstep(uOuterCutOff, uCutOff, theta);
 
-			vec3 normal = normalize(v_normal);
 			float diff = max(dot(normal, lightDir), 0.0);
 
-			vec3 diffuse = diff * intensity * uAmbientLightColor * flashlightIntensity;
-
 			vec3 ambient = uAmbientLightColor * 0.25;
+			vec3 diffuse = diff * intensity * vec3(1.0) * flashlightIntensity;
 
 			vec3 result = ambient + diffuse;
 
@@ -87,24 +97,26 @@ export default class Scene {
 		`;
 
 		const compile = (src, type) => {
-		const s = gl.createShader(type);
-		gl.shaderSource(s, src);
-		gl.compileShader(s);
-		if (!gl.getShaderParameter(s, gl.COMPILE_STATUS)) {
-			throw new Error(gl.getShaderInfoLog(s));
-		}
-		return s;
+			const s = gl.createShader(type);
+			gl.shaderSource(s, src);
+			gl.compileShader(s);
+			if (!gl.getShaderParameter(s, gl.COMPILE_STATUS)) {
+				throw new Error(gl.getShaderInfoLog(s));
+			}
+			return s;
 		};
+
 		const prog = gl.createProgram();
 		gl.attachShader(prog, compile(vs, gl.VERTEX_SHADER));
 		gl.attachShader(prog, compile(fs, gl.FRAGMENT_SHADER));
 		gl.linkProgram(prog);
 		if (!gl.getProgramParameter(prog, gl.LINK_STATUS)) {
-		throw new Error(gl.getProgramInfoLog(prog));
+			throw new Error(gl.getProgramInfoLog(prog));
 		}
 		gl.useProgram(prog);
 		return prog;
 	}
+
 
 	addObject(obj) {
 		this.objects.push(obj);
